@@ -4,8 +4,10 @@ import com.github.vitorhenriquec.accountcore.domain.model.AccountModel
 import com.github.vitorhenriquec.accountcore.infrastructure.adapters.AccountDatabaseAdapter
 import com.github.vitorhenriquec.accountcore.infrastructure.repositories.AccountRepository
 import com.github.vitorhenriquec.accountcore.infrastructure.util.toEntity
-import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertDoesNotThrow
+import org.junit.jupiter.api.assertThrows
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.`when`
@@ -26,8 +28,10 @@ class AccountDatabaseAdapterTest {
             repo.save(any())
         ).thenReturn(account.toEntity())
 
-        val accountResult = adapter.save(account)
-        Assertions.assertEquals(account.id, accountResult.id)
+        val accountResult = assertDoesNotThrow {
+            adapter.save(account)
+        }
+        assertEquals(account.id, accountResult.id)
     }
 
     @Test
@@ -38,10 +42,9 @@ class AccountDatabaseAdapterTest {
             repo.save(any())
         ).thenThrow(DataIntegrityViolationException("Duplicate key"))
 
-        Assertions.assertThrows(DataIntegrityViolationException::class.java,
-            {
-                adapter.save(account)
-            }
-        )
+        assertThrows<DataIntegrityViolationException> {
+            adapter.save(account)
+        }
+
     }
 }
