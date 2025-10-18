@@ -17,16 +17,16 @@ data class Account(
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "accounts_seq_id_gen")
     @SequenceGenerator(name = "accounts_seq_id_gen", sequenceName = "accounts_seq_id_seq_id", allocationSize = 1)
-    private val id: Long,
+    val id: Long,
 
     @Column(name = "document_number", nullable = false, unique = true)
-    private val documentNumber: String,
+    val documentNumber: String,
 
     @Column(name = "created_at", nullable = false)
     @CreationTimestamp
-    private val createdAt: LocalDateTime,
+    val createdAt: LocalDateTime,
 
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
-    private val updatedAt: LocalDateTime? = null,
+    val updatedAt: LocalDateTime? = null,
 )

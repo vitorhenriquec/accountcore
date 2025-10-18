@@ -3,6 +3,7 @@ package com.github.vitorhenriquec.accountcore.unit.infrastructure.adapter
 import com.github.vitorhenriquec.accountcore.domain.model.AccountModel
 import com.github.vitorhenriquec.accountcore.infrastructure.adapters.AccountDatabaseAdapter
 import com.github.vitorhenriquec.accountcore.infrastructure.repositories.AccountRepository
+import com.github.vitorhenriquec.accountcore.infrastructure.util.toEntity
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.any
@@ -18,7 +19,12 @@ class AccountDatabaseAdapterTest {
     @Test
     fun `Should save an account`() {
         val account = AccountModel()
+        account.id = 1241212L
         account.documentNumber = "12332099800"
+
+        `when`(
+            repo.save(any())
+        ).thenReturn(account.toEntity())
 
         val accountResult = adapter.save(account)
         Assertions.assertEquals(account.id, accountResult.id)
