@@ -5,7 +5,7 @@ networks:
 
 services:
   accounts-postgres:
-    image: postgres:13.5
+    image: postgres:16
     ports:
       - "5433:5432"
     networks:

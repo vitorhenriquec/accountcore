@@ -1,9 +1,8 @@
 CREATE TABLE accounts (
     id int8 NOT NULL,
     document_number VARCHAR(255) NOT NULL,
-    active BOOLEAN NOT NULL,
     created_at timestamp NOT NULL,
-    updated_at timestamp NOT NULL,
+    updated_at timestamp NULL,
     CONSTRAINT accounts_pk PRIMARY KEY (id)
 );
 
