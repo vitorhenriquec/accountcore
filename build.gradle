@@ -5,6 +5,7 @@ plugins {
 	id 'io.spring.dependency-management' version '1.1.7'
 	id 'org.springframework.cloud.contract' version '4.3.0'
 	id 'org.jetbrains.kotlin.plugin.jpa' version '1.9.25'
+	id 'jacoco'
 }
 
 group = 'com.github.vitorhenriquec'
@@ -75,5 +76,26 @@ tasks.named('contractTest') {
 }
 
 tasks.named('test') {
+	maxParallelForks = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
 	useJUnitPlatform()
+	finalizedBy(tasks.jacocoTestReport)
+}
+
+tasks.named("jacocoTestReport") {
+	executionData(file("${project.buildDir}/jacoco/test.exec"))
+
+	reports {
+		html.required.set(true)
+		xml.required.set(false)
+	}
+
+	classDirectories.setFrom(
+			files(
+					classDirectories.files.collect {
+						fileTree(it) {
+							exclude("**/accountcore/AccountcoreApplication**")
+						}
+					}
+			)
+	)
 }
