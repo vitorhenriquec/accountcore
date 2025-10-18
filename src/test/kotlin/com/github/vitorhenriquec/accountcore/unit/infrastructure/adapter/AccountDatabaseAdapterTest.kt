@@ -18,6 +18,7 @@ class AccountDatabaseAdapterTest {
     @Test
     fun `Should save an account`() {
         val account = AccountModel()
+        account.documentNumber = "12332099800"
 
         val accountResult = adapter.save()
         Assertions.assertEquals(account.id, accountResult.id)
@@ -29,9 +30,12 @@ class AccountDatabaseAdapterTest {
 
         `when`(
             repo.save(any())
-        ).thenThrow(DataIntegrityViolationException("duplicate key"))
+        ).thenThrow(DataIntegrityViolationException("Duplicate key"))
 
-        val accountResult = adapter.save()
-        Assertions.assertEquals(account.id, accountResult.id)
+        Assertions.assertThrows(DataIntegrityViolationException::class.java,
+            {
+                adapter.save()
+            }
+        )
     }
 }
