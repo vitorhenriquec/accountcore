@@ -9,7 +9,7 @@ class AccountDatabaseAdapter(
     private val repo: AccountRepository
 ) {
 
-    fun save(): AccountModel {
+    fun save(account: AccountModel): AccountModel {
         TODO("Not yet implemented")
     }
 

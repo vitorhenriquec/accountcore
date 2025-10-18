@@ -20,7 +20,7 @@ class AccountDatabaseAdapterTest {
         val account = AccountModel()
         account.documentNumber = "12332099800"
 
-        val accountResult = adapter.save()
+        val accountResult = adapter.save(account)
         Assertions.assertEquals(account.id, accountResult.id)
     }
 
@@ -34,7 +34,7 @@ class AccountDatabaseAdapterTest {
 
         Assertions.assertThrows(DataIntegrityViolationException::class.java,
             {
-                adapter.save()
+                adapter.save(account)
             }
         )
     }
