@@ -97,6 +97,8 @@ tasks.named("jacocoTestReport") {
 					classDirectories.files.collect {
 						fileTree(it) {
 							exclude("**/accountcore/AccountcoreApplication**")
+							exclude("**/entities/**")
+							exclude("**/configurations/**")
 						}
 					}
 			)
