@@ -1,4 +1,4 @@
-package com.github.vitorhenriquec.accountcore.domain.util
+package com.github.vitorhenriquec.accountcore.infrastructure.util
 
 import java.time.LocalDateTime
 import java.time.ZoneId

@@ -1,6 +1,6 @@
 package com.github.vitorhenriquec.accountcore.domain.model
 
-import com.github.vitorhenriquec.accountcore.domain.util.nowInSaoPaulo
+import com.github.vitorhenriquec.accountcore.infrastructure.util.nowInSaoPaulo
 import java.time.LocalDateTime
 
 class AccountModel {
