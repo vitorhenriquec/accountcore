@@ -129,4 +129,14 @@ class AccountResourceTest(
         ).andDo(MockMvcResultHandlers.print())
             .andExpect(MockMvcResultMatchers.status().isNotFound())
     }
+
+    @Test
+    fun `Should not find an account when id not sent`() {
+
+        mockMvc.perform(
+            MockMvcRequestBuilders.get("/accounts/")
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andDo(MockMvcResultHandlers.print())
+            .andExpect(MockMvcResultMatchers.status().isBadRequest())
+    }
 }
