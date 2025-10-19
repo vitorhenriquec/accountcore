@@ -4,7 +4,9 @@ import com.github.vitorhenriquec.accountcore.infrastructure.adapters.AccountData
 import org.springframework.stereotype.Service
 
 @Service
-class FindAccountUseCaseImpl(adapter: AccountDatabaseAdapter) : FindAccountUseCase {
+class FindAccountUseCaseImpl(
+    private val adapter: AccountDatabaseAdapter
+) : FindAccountUseCase {
 
     override fun findById(id: Long): Pair<Long, String> {
         TODO("Not yet implemented")
