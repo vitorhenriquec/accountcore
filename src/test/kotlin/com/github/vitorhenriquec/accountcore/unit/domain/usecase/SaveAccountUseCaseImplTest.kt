@@ -1,0 +1,74 @@
+package com.github.vitorhenriquec.accountcore.unit.domain.usecase
+
+import com.github.vitorhenriquec.accountcore.domain.exceptions.AccountAlreadyExistException
+import com.github.vitorhenriquec.accountcore.domain.model.AccountModel
+import com.github.vitorhenriquec.accountcore.domain.usecase.SaveAccountUseCaseImpl
+import com.github.vitorhenriquec.accountcore.infrastructure.adapters.AccountDatabaseAdapter
+import com.github.vitorhenriquec.accountcore.infrastructure.entities.Account
+import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertDoesNotThrow
+import org.junit.jupiter.api.assertThrows
+import org.mockito.Mockito.mock
+import org.mockito.Mockito.`when`
+import org.mockito.ArgumentMatchers.any
+import org.springframework.dao.DataIntegrityViolationException
+
+class SaveAccountUseCaseImplTest {
+
+    private val adapter = mock<AccountDatabaseAdapter>()
+
+    private val useCase = SaveAccountUseCaseImpl(
+        adapter
+    )
+
+    @Test
+    fun `Should save an account`() {
+        val documentNumber = "313131313131313"
+
+        val account = AccountModel(id = 12L, documentNumber = documentNumber)
+
+        `when`(
+            adapter.save(account)
+        ).thenReturn(account)
+
+        val idSaved = assertDoesNotThrow {
+            useCase.save(account)
+        }
+
+        Assertions.assertEquals(account.id, idSaved)
+    }
+
+    @Test
+    fun `Should not save an account`() {
+        val documentNumber = "313131313131313"
+        val account = AccountModel(id = 12L, documentNumber = documentNumber)
+
+        `when`(
+            adapter.save(account)
+        ).thenThrow(
+            DataIntegrityViolationException("Column unique")
+        )
+
+        assertThrows<DataIntegrityViolationException> {
+            useCase.save(account)
+        }
+    }
+
+    @Test
+    fun `Should not save an account cause it already exists`() {
+        val documentNumber = "313131313131313"
+        val account = AccountModel(id = 12L, documentNumber = documentNumber)
+
+        `when`(
+            adapter.save(account)
+        ).thenThrow(
+            AccountAlreadyExistException()
+        )
+
+        assertThrows<AccountAlreadyExistException> {
+            useCase.save(account)
+        }
+    }
+
+}
