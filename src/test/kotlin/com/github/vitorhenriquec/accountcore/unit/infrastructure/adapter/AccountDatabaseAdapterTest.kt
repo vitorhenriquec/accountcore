@@ -20,9 +20,10 @@ class AccountDatabaseAdapterTest {
 
     @Test
     fun `Should save an account`() {
-        val account = AccountModel()
-        account.id = 1241212L
-        account.documentNumber = "12332099800"
+        val account = AccountModel(
+            id = 1241212L,
+            documentNumber = "12332099800"
+        )
 
         `when`(
             repo.save(any())
@@ -32,6 +33,7 @@ class AccountDatabaseAdapterTest {
             adapter.save(account)
         }
         assertEquals(account.id, accountResult.id)
+        assertEquals(account.documentNumber, "12332099800")
     }
 
     @Test
