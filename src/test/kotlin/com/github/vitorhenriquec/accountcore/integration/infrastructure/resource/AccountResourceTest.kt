@@ -4,6 +4,7 @@ import com.github.vitorhenriquec.accountcore.domain.model.AccountModel
 import com.github.vitorhenriquec.accountcore.infrastructure.request.SaveAccountRequest
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.vitorhenriquec.accountcore.infrastructure.repositories.AccountRepository
+import com.github.vitorhenriquec.accountcore.infrastructure.response.FindAccountResponse
 import com.github.vitorhenriquec.accountcore.infrastructure.response.SaveAccountResponse
 import com.github.vitorhenriquec.accountcore.infrastructure.util.toEntity
 import org.junit.jupiter.api.Test
@@ -93,5 +94,39 @@ class AccountResourceTest(
                 .accept(MediaType.APPLICATION_JSON)
         ).andDo(MockMvcResultHandlers.print())
             .andExpect(MockMvcResultMatchers.status().isConflict())
+    }
+
+    @Test
+    fun `Should find an account`() {
+        val documentNumber = "12345678912"
+
+        val accountSaved = accountRepository.saveAndFlush(
+            AccountModel(
+                documentNumber = documentNumber
+            ).toEntity()
+        )
+
+        val result = mockMvc.perform(
+            MockMvcRequestBuilders.get("/accounts/12")
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andDo(MockMvcResultHandlers.print())
+            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andReturn()
+
+        val responseBody = result.response.contentAsString
+        val accountResponse = objectMapper.readValue(responseBody, FindAccountResponse::class.java)
+
+        assertEquals(accountResponse.id, accountSaved.id)
+        assertEquals(accountResponse.documentNumber, documentNumber)
+    }
+
+    @Test
+    fun `Should not find an account`() {
+
+        mockMvc.perform(
+            MockMvcRequestBuilders.get("/accounts/25")
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andDo(MockMvcResultHandlers.print())
+            .andExpect(MockMvcResultMatchers.status().isNotFound())
     }
 }
