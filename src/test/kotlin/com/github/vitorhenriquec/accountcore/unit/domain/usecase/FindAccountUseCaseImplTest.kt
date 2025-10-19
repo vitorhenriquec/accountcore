@@ -28,11 +28,12 @@ class FindAccountUseCaseImplTest {
             adapter.findById(account.id)
         ).thenReturn(account)
 
-        val pairResult = assertDoesNotThrow {
+        val result = assertDoesNotThrow {
             usecase.findById(account.id)
         }
 
-        assertEquals(Pair(account.id, account.documentNumber), pairResult)
+        assertEquals(account.id, result.id)
+        assertEquals(account.documentNumber, result.documentNumber)
     }
 
     @Test
@@ -42,7 +43,7 @@ class FindAccountUseCaseImplTest {
 
         `when`(
             adapter.findById(account.id)
-        ).thenReturn(account)
+        ).thenThrow(AccountNotFoundException())
 
         assertThrows<AccountNotFoundException> {
             usecase.findById(account.id)
