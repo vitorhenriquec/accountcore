@@ -26,6 +26,10 @@ class AccountDatabaseAdapter(
         return repo.save(entity).toModel()
     }
 
+    override fun findById(id: Long): AccountModel {
+        TODO("Not yet implemented")
+    }
+
 }
 
 
