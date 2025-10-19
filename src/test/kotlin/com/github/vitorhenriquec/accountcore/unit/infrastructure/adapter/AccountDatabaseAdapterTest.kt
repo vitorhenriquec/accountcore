@@ -1,5 +1,6 @@
 package com.github.vitorhenriquec.accountcore.unit.infrastructure.adapter
 
+import com.github.vitorhenriquec.accountcore.domain.exceptions.AccountAlreadyExistException
 import com.github.vitorhenriquec.accountcore.domain.model.AccountModel
 import com.github.vitorhenriquec.accountcore.infrastructure.adapters.AccountDatabaseAdapter
 import com.github.vitorhenriquec.accountcore.infrastructure.repositories.AccountRepository
@@ -9,9 +10,11 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import org.mockito.ArgumentMatchers.any
+import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.`when`
 import org.springframework.dao.DataIntegrityViolationException
+import java.util.Optional
 
 
 class AccountDatabaseAdapterTest {
@@ -29,6 +32,10 @@ class AccountDatabaseAdapterTest {
             repo.save(any())
         ).thenReturn(account.toEntity())
 
+        `when`(
+            repo.findByDocumentNumber(anyString())
+        ).thenReturn(Optional.empty())
+
         val accountResult = assertDoesNotThrow {
             adapter.save(account)
         }
@@ -44,9 +51,26 @@ class AccountDatabaseAdapterTest {
             repo.save(any())
         ).thenThrow(DataIntegrityViolationException("Duplicate key"))
 
+        `when`(
+            repo.findByDocumentNumber(anyString())
+        ).thenReturn(Optional.empty())
+
         assertThrows<DataIntegrityViolationException> {
             adapter.save(account)
         }
 
+    }
+
+    @Test
+    fun `Should not save an account when already exists`() {
+        val account = AccountModel()
+
+        `when`(
+            repo.findByDocumentNumber(anyString())
+        ).thenReturn(Optional.of(account.toEntity()))
+
+        assertThrows<AccountAlreadyExistException> {
+            adapter.save(account)
+        }
     }
 }

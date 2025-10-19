@@ -1,32 +1,31 @@
-package com.github.vitorhenriquec.accountcore.integration.infrastructure.resource
+package com.github.vitorhenriquec.accountcore.unit.infrastructure.resource
 
-import com.github.vitorhenriquec.accountcore.domain.model.AccountModel
 import com.github.vitorhenriquec.accountcore.infrastructure.request.SaveAccountRequest
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.github.vitorhenriquec.accountcore.infrastructure.repositories.AccountRepository
+import com.github.vitorhenriquec.accountcore.domain.exceptions.AccountAlreadyExistException
+import com.github.vitorhenriquec.accountcore.domain.usecase.SaveAccountUseCaseImpl
+import com.github.vitorhenriquec.accountcore.infrastructure.resouce.AccountResource
 import com.github.vitorhenriquec.accountcore.infrastructure.response.SaveAccountResponse
-import com.github.vitorhenriquec.accountcore.infrastructure.util.toEntity
+import com.ninjasquad.springmockk.MockkBean
+import io.mockk.every
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
-import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.http.MediaType
-import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import kotlin.test.assertEquals
 
-@SpringBootTest
-@AutoConfigureMockMvc
-@ActiveProfiles(profiles = ["test"])
-class AccountResourceTest(
+@WebMvcTest(AccountResource::class)
+class AccountResourceTest {
+
     @Autowired
-    private val mockMvc: MockMvc,
-    @Autowired
-    private val accountRepository: AccountRepository,
-) {
+    private lateinit var mockMvc: MockMvc
+
+    @MockkBean
+    private lateinit var usecase: SaveAccountUseCaseImpl
 
     private val objectMapper = ObjectMapper()
 
@@ -39,6 +38,10 @@ class AccountResourceTest(
                 documentNumber = documentNumber
             )
         )
+
+        every {
+            usecase.save(any())
+        } returns (1L)
 
         val result = mockMvc.perform(
             MockMvcRequestBuilders.post("/accounts")
@@ -57,6 +60,7 @@ class AccountResourceTest(
 
     @Test
     fun `Should not save an account when document is empty`() {
+
         val accountRequest = objectMapper.writeValueAsString(
             SaveAccountRequest(
                 documentNumber = ""
@@ -74,15 +78,16 @@ class AccountResourceTest(
 
     @Test
     fun `Should not save an account is invalid`() {
-        accountRepository.saveAndFlush(
-            AccountModel(
-                documentNumber = "12345678911"
-            ).toEntity()
-        )
+        val documentNumber = "12345678911"
+
+        every{
+            usecase.save(any())
+        } throws AccountAlreadyExistException()
+
 
         val accountRequest = objectMapper.writeValueAsString(
             SaveAccountRequest(
-                documentNumber = "12345678911"
+                documentNumber = documentNumber
             )
         )
 

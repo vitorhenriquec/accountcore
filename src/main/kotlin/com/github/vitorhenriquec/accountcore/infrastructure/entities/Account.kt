@@ -7,6 +7,7 @@ import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.SequenceGenerator
 import jakarta.persistence.Table
+import jakarta.persistence.UniqueConstraint
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
 import java.time.LocalDateTime
@@ -16,7 +17,7 @@ import java.time.LocalDateTime
 data class Account(
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "accounts_seq_id_gen")
-    @SequenceGenerator(name = "accounts_seq_id_gen", sequenceName = "accounts_seq_id_seq_id", allocationSize = 1)
+    @SequenceGenerator(name = "accounts_seq_id_gen", sequenceName = "accounts_seq_id", allocationSize = 1)
     val id: Long,
 
     @Column(name = "document_number", nullable = false, unique = true)

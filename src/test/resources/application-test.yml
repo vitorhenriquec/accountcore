@@ -13,7 +13,7 @@ spring:
       database-platform: org.hibernate.dialect.H2Dialect
       open-in-view: false
       hibernate:
-        ddl-auto: none
+        ddl-auto: validate
       show-sql: true
     database:
       driverClassName: org.postgresql.Driver
