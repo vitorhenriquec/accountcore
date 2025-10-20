@@ -118,11 +118,11 @@ class AccountResourceTest {
         )
 
         every{
-            findAccountUseCase.findById(anyLong())
+            findAccountUseCase.findById(accountModel.id)
         } returns (accountModel)
 
         val result = mockMvc.perform(
-            MockMvcRequestBuilders.get("/accounts/12")
+            MockMvcRequestBuilders.get("/accounts/${accountModel.id}")
                 .contentType(MediaType.APPLICATION_JSON)
         ).andDo(MockMvcResultHandlers.print())
             .andExpect(MockMvcResultMatchers.status().isOk())
