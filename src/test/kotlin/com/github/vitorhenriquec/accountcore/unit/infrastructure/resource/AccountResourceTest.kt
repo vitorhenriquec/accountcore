@@ -3,6 +3,7 @@ package com.github.vitorhenriquec.accountcore.unit.infrastructure.resource
 import com.github.vitorhenriquec.accountcore.infrastructure.request.SaveAccountRequest
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.vitorhenriquec.accountcore.domain.exceptions.AccountAlreadyExistException
+import com.github.vitorhenriquec.accountcore.domain.exceptions.AccountNotFoundException
 import com.github.vitorhenriquec.accountcore.domain.model.AccountModel
 import com.github.vitorhenriquec.accountcore.domain.usecase.FindAccountUseCaseImpl
 import com.github.vitorhenriquec.accountcore.domain.usecase.SaveAccountUseCaseImpl
@@ -136,9 +137,12 @@ class AccountResourceTest {
 
     @Test
     fun `Should not find an account when account is not saved`() {
+        every{
+            findAccountUseCase.findById(1L)
+        } throws (AccountNotFoundException())
 
         mockMvc.perform(
-            MockMvcRequestBuilders.post("/accounts/100")
+            MockMvcRequestBuilders.get("/accounts/1")
                 .contentType(MediaType.APPLICATION_JSON)
         ).andDo(MockMvcResultHandlers.print())
             .andExpect(MockMvcResultMatchers.status().isNotFound())
@@ -148,7 +152,7 @@ class AccountResourceTest {
     fun `Should not find an account when account id is not sent`() {
 
         mockMvc.perform(
-            MockMvcRequestBuilders.post("/accounts/")
+            MockMvcRequestBuilders.get("/accounts/{}")
                 .contentType(MediaType.APPLICATION_JSON)
         ).andDo(MockMvcResultHandlers.print())
             .andExpect(MockMvcResultMatchers.status().isBadRequest())

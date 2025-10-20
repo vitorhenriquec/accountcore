@@ -107,7 +107,7 @@ class AccountResourceTest(
         )
 
         val result = mockMvc.perform(
-            MockMvcRequestBuilders.get("/accounts/12")
+            MockMvcRequestBuilders.get("/accounts/${accountSaved.id}")
                 .contentType(MediaType.APPLICATION_JSON)
         ).andDo(MockMvcResultHandlers.print())
             .andExpect(MockMvcResultMatchers.status().isOk())
@@ -134,7 +134,7 @@ class AccountResourceTest(
     fun `Should not find an account when id not sent`() {
 
         mockMvc.perform(
-            MockMvcRequestBuilders.get("/accounts/")
+            MockMvcRequestBuilders.get("/accounts/{}")
                 .contentType(MediaType.APPLICATION_JSON)
         ).andDo(MockMvcResultHandlers.print())
             .andExpect(MockMvcResultMatchers.status().isBadRequest())

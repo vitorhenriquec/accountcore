@@ -1,10 +1,12 @@
 package com.github.vitorhenriquec.accountcore.infrastructure.resouce
 
 import com.github.vitorhenriquec.accountcore.domain.model.AccountModel
+import com.github.vitorhenriquec.accountcore.domain.usecase.FindAccountUseCase
 import com.github.vitorhenriquec.accountcore.domain.usecase.SaveAccountUseCase
 import com.github.vitorhenriquec.accountcore.infrastructure.request.SaveAccountRequest
 import com.github.vitorhenriquec.accountcore.infrastructure.response.FindAccountResponse
 import com.github.vitorhenriquec.accountcore.infrastructure.response.SaveAccountResponse
+import org.apache.coyote.Response
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -21,7 +23,9 @@ import org.springframework.web.bind.annotation.RequestMapping
 @RequestMapping("accounts")
 class AccountResource(
     @Autowired
-    private val saveAccountUseCase: SaveAccountUseCase
+    private val saveAccountUseCase: SaveAccountUseCase,
+    @Autowired
+    private val findAccountUseCase: FindAccountUseCase
 ) {
 
     @PostMapping(
@@ -51,6 +55,13 @@ class AccountResource(
     fun getAccount(
         @PathVariable("accountId") accountId: Long
     ): ResponseEntity<FindAccountResponse> {
-        TODO()
+        val accountFound = findAccountUseCase.findById(accountId)
+
+        return ResponseEntity.ok(
+            FindAccountResponse(
+                id = accountFound.id,
+                documentNumber = accountFound.documentNumber
+            )
+        )
     }
 }
