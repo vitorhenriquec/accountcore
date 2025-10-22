@@ -4,4 +4,5 @@ import com.github.vitorhenriquec.accountcore.domain.model.AccountModel
 
 interface AccountDatabase {
     fun save(account: AccountModel): AccountModel
+    fun findById(id: Long): AccountModel
 }

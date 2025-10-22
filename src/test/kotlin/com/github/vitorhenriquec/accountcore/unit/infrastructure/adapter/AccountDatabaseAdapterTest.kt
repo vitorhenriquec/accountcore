@@ -1,6 +1,7 @@
 package com.github.vitorhenriquec.accountcore.unit.infrastructure.adapter
 
 import com.github.vitorhenriquec.accountcore.domain.exceptions.AccountAlreadyExistException
+import com.github.vitorhenriquec.accountcore.domain.exceptions.AccountNotFoundException
 import com.github.vitorhenriquec.accountcore.domain.model.AccountModel
 import com.github.vitorhenriquec.accountcore.infrastructure.adapters.AccountDatabaseAdapter
 import com.github.vitorhenriquec.accountcore.infrastructure.repositories.AccountRepository
@@ -10,6 +11,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import org.mockito.ArgumentMatchers.any
+import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.`when`
@@ -71,6 +73,36 @@ class AccountDatabaseAdapterTest {
 
         assertThrows<AccountAlreadyExistException> {
             adapter.save(account)
+        }
+    }
+
+
+    @Test
+    fun `Should find an account saved`() {
+        val account = AccountModel(id = 12)
+
+        `when`(
+            repo.findById(anyLong())
+        ).thenReturn(Optional.of(account.toEntity()))
+
+        val accountFound = assertDoesNotThrow {
+            adapter.findById(account.id)
+        }
+
+        assertEquals(account.id, accountFound.id)
+        assertEquals(account.documentNumber, accountFound.documentNumber)
+    }
+
+    @Test
+    fun `Should not find an account`() {
+        val account = AccountModel(id = 12)
+
+        `when`(
+            repo.findById(anyLong())
+        ).thenReturn(Optional.empty())
+
+        assertThrows<AccountNotFoundException> {
+            adapter.findById(account.id)
         }
     }
 }

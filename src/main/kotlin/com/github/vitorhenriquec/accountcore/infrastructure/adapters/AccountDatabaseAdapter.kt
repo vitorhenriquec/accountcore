@@ -7,6 +7,7 @@ import com.github.vitorhenriquec.accountcore.infrastructure.repositories.Account
 import com.github.vitorhenriquec.accountcore.infrastructure.util.toEntity
 import com.github.vitorhenriquec.accountcore.infrastructure.util.toModel
 import org.springframework.stereotype.Component
+import com.github.vitorhenriquec.accountcore.domain.exceptions.AccountNotFoundException
 
 @Component
 class AccountDatabaseAdapter(
@@ -24,6 +25,10 @@ class AccountDatabaseAdapter(
         }
 
         return repo.save(entity).toModel()
+    }
+
+    override fun findById(id: Long): AccountModel {
+        return repo.findById(id).orElseThrow{AccountNotFoundException()}.toModel()
     }
 
 }
