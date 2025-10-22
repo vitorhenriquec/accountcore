@@ -29,7 +29,7 @@ Then you cant step up the application using Docker with this command:
 
 ```shell
 docker build -t accounts-app .
-docker run -p 8081:8081 -e SPRING_PROFILES_ACTIVE=local accounts-app
+docker run -p 8082:8082 -e SPRING_PROFILES_ACTIVE=local accounts-app
 ```
 
 

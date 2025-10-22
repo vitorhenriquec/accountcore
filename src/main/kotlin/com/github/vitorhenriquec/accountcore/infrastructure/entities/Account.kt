@@ -16,8 +16,7 @@ import java.time.LocalDateTime
 @Table(name = "accounts")
 data class Account(
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "accounts_seq_id_gen")
-    @SequenceGenerator(name = "accounts_seq_id_gen", sequenceName = "accounts_seq_id", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long,
 
     @Column(name = "document_number", nullable = false, unique = true)

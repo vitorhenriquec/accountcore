@@ -13,7 +13,6 @@ import com.github.vitorhenriquec.accountcore.infrastructure.response.SaveAccount
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
 import org.junit.jupiter.api.Test
-import org.mockito.ArgumentMatchers.anyLong
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.http.MediaType
